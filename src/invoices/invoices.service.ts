@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Invoice } from 'src/schemas/invoice.schema';
+import { Invoice } from './entities/invoice.entity';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 
@@ -11,23 +11,41 @@ export class InvoicesService {
     @InjectModel(Invoice.name) private invoiceModel: Model<Invoice>,
   ) {}
 
-  create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
+  async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
     return new this.invoiceModel(createInvoiceDto).save();
   }
 
-  findAll() {
-    return `This action returns all invoices`;
+  async findAll(): Promise<Invoice[]> {
+    const invoice: Invoice[] = await this.invoiceModel.find();
+    return invoice;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
+  async findOne(id: string): Promise<Invoice> {
+    const invoice: Invoice = await this.invoiceModel.findById(id);
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with id of ${id} does not exist`);
+    }
+    return invoice;
   }
 
-  update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
-    return `This action updates a #${id} invoice`;
+  async update(
+    id: string,
+    updateInvoiceDto: UpdateInvoiceDto,
+  ): Promise<Invoice> {
+    const invoice: Invoice = await this.invoiceModel.findByIdAndUpdate(id, {
+      $set: { ...updateInvoiceDto },
+    });
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with id of ${id} does not exist`);
+    }
+    return invoice;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} invoice`;
+  async remove(id: string) {
+    const invoice: Invoice = await this.invoiceModel.findByIdAndDelete(id);
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with id of ${id} does not exist`);
+    }
+    return invoice;
   }
 }
