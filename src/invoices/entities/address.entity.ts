@@ -13,7 +13,7 @@ export class Address extends Document {
   postCode: string;
 
   @Prop()
-  country: number;
+  country: string;
 }
 
 export const AddressSchema = SchemaFactory.createForClass(Address);

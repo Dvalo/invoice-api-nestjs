@@ -5,6 +5,8 @@ import {
   IsNotEmpty,
   MinLength,
   IsArray,
+  IsNumber,
+  IsNotEmptyObject,
 } from 'class-validator';
 import { Address } from '../entities/address.entity';
 import { Item } from '../entities/item.entity';
@@ -40,18 +42,18 @@ export class CreateInvoiceDto {
   status: string;
 
   @IsNotEmpty()
-  @MinLength(10)
-  SenderAddress: Address;
+  @IsNotEmptyObject()
+  senderAddress: Address;
 
   @IsNotEmpty()
-  @MinLength(10)
+  @IsNotEmptyObject()
   clientAddress: Address;
 
   @IsArray()
   @IsNotEmpty()
   items: Item[];
 
-  @IsInt()
+  @IsNumber()
   @IsNotEmpty()
   total: number;
 }

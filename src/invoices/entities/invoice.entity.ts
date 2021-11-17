@@ -27,7 +27,7 @@ export class Invoice extends Document {
   status: string;
 
   @Prop()
-  SenderAddress: Address;
+  senderAddress: Address;
 
   @Prop()
   clientAddress: Address;
