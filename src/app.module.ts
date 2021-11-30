@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { InvoicesModule } from './invoices/invoices.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/invoices'),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot('mongodb://mongodb:27017', {
+      dbName: 'invoices',
+    }),
     InvoicesModule,
   ],
   controllers: [],
